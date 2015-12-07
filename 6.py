@@ -7,7 +7,7 @@ class Grid(object):
         for i in range(0, y):
             self.cells.append([])
             for j in range(0, x):
-                self.cells[i].append(False)
+                self.cells[i].append(0)
 
     def read(self, line):
         """
@@ -22,14 +22,14 @@ class Grid(object):
                 self.update(action, j, i)
 
     def update(self, action, x, y):
-        if action == 'turn off':
-            self.cells[y][x] = False
+        if action == 'turn off' and self.cells[y][x] > 0:
+            self.cells[y][x] -= 1
 
         elif action == 'turn on':
-            self.cells[y][x] = True
+            self.cells[y][x] += 1
 
         elif action == 'toggle':
-            self.cells[y][x] = not self.cells[y][x]
+            self.cells[y][x] += 2
 
     def count(self):
         return sum([sum(x) for x in self.cells])
