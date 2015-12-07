@@ -1,6 +1,6 @@
 import operator
 
-def list_gifts(line):
+def list_gifts(line, raw=False):
     grid = {}
     position = (0, 0) # Starting pos
     moves = {
@@ -21,8 +21,21 @@ def list_gifts(line):
         #print position
         _gift(position)
 
+    return raw and grid or len(grid)
+
+
+def list_gifts_robo(line):
+    """
+    Same as above but with two players
+    """
+    grid = {}
+    santa_line = ''.join([line[i] for i in range(0, len(line), 2)])
+    grid.update(list_gifts(santa_line, raw=True))
+    robo_line = ''.join([line[i] for i in range(1, len(line), 2)])
+    grid.update(list_gifts(robo_line, raw=True))
+
     return len(grid)
 
 if __name__ == '__main__':
     with open('3.input', 'r') as f:
-        print list_gifts(f.read())
+        print list_gifts_robo(f.read())
