@@ -103,9 +103,27 @@ class Circuit(object):
                 val = 65536 + val
             print '%s: %s' % (w, val)
 
+        return self.wires[target]
+
 if __name__ == '__main__':
     c = Circuit()
-    with open('7.input', 'r') as f:
-        for line in f.readlines():
-            c.read(line.replace('\n', ''))
-    c.run('a')
+
+    def _load():
+        with open('7.input', 'r') as f:
+            for line in f.readlines():
+                c.read(line.replace('\n', ''))
+
+    # First pass
+    _load()
+    value = c.run('a')
+
+    # Reset
+    _load()
+
+    # Override
+    c.wires['b'] = value
+
+    # Second pass
+    value = c.run('a')
+
+    print 'FINAL', value
