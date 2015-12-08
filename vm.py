@@ -1,3 +1,4 @@
+# Source : https://challenge.synacor.com/
 import sys
 import inspect
 
@@ -46,6 +47,9 @@ class Machine(object):
         # Setup memory
         self.memory = {}
 
+        # Not yet running
+        self.running = False
+
     def run(self, filename):
         # Load all vm instructions
         self.memory = self.read_instructions(filename)
@@ -54,7 +58,8 @@ class Machine(object):
         self.memory += [0, ] * (MAX - len(self.memory))
 
         # Run those instructions
-        while self.cursor >= 0 and self.cursor < len(self.memory):
+        self.running = True
+        while self.running:
             ins = self.memory[self.cursor]
 
             # Not implemented instruction
@@ -110,10 +115,12 @@ class Machine(object):
 
     def ins_in(self, a):
         """
-        read a character from the terminal and write its ascii code to <a>; it can be assumed that once input starts, it will continue until a newline is encountered; this means that you can safely read whole lines from the keyboard and trust that they will be fully read
+        read a character from the terminal and write its ascii code to <a>
+        it can be assumed that once input starts, it will continue until a newline is encountered
+        this means that you can safely read whole lines from the keyboard and trust that they will be fully read
         """
-        print 'READ !!!'
-        self.halt()
+        self.set(a, ord(sys.stdin.read(1)))
+        self.cursor += 2
 
     def ins_jt(self, a, b):
         """
@@ -262,7 +269,7 @@ class Machine(object):
         """
         Stop VM
         """
-        sys.exit(0)
+        self.running = False
 
     def read_instructions(self, filename):
         """
