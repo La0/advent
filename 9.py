@@ -47,7 +47,7 @@ def search_shortest(lines):
 
     _build_travel(sorted(cities.keys()), len(cities), [None, ]* len(cities))
 
-    best = min(costs.keys())
+    best = max(costs.keys())
     print 'BEST', best
     for t in costs[best]:
         print t
