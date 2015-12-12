@@ -13,6 +13,8 @@ def sum_json(filename):
             return sum(map(_count, data))
 
         if isinstance(data, dict):
+            if 'red' in data.values():
+                return 0
             return sum(map(_count, data.keys())) + sum(map(_count, data.values()))
 
         return 0
