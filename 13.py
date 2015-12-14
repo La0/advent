@@ -24,6 +24,12 @@ def calc_happiness(lines):
 
         people[a][b] = score
 
+    # Add myself (0 with everyone)
+    people['Me'] = {}
+    for a in people:
+        people[a]['Me'] = 0
+        people['Me'][a] = 0
+
     from pprint import pprint
     pprint(people)
 
