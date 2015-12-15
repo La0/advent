@@ -44,6 +44,10 @@ def find_recipe(lines, limit=100):
     # Search best score
     best_score = 1
     for recipe in recipes:
+        # Calories must be 500 to eval the recipe
+        if sum([i.properties[4]*nb for i, nb in recipe]) != 500:
+            continue
+
         # Calc score
         score = 1
         for i in range(0, 4):
