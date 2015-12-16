@@ -30,7 +30,16 @@ def find_sue(lines):
     for aunt, props in aunts.items():
 
         # Calc distance
-        distance = sum([abs(v - detected[k]) for k,v in props.items()])
+        distance = 0
+        for k,v in props.items():
+            value = detected[k]
+            if k in ('cats', 'trees') and v > value:
+                continue
+            if k in ('pomeranians', 'goldfish') and v < value:
+                continue
+            distance += abs(v - value)
+
+        # Find min distance
         best_distance = min(distance, best_distance)
         if distance == best_distance:
             print aunt, props, distance
