@@ -15,29 +15,37 @@ class Grid(object):
         self.xmax = len(self.grid[0])
 
         print 'Initial'
+        self.add_static(self.grid)
         self.debug()
 
     def run(self, limit):
         for i in range(1, limit+1):
-            cpt = 0
             self.new_grid = [['.' for x in range(self.xmax)] for y in range(self.ymax)]
 
             # Evolve full grid one step forward
             for y in range(0, len(self.grid)):
                 for x in range(0, len(self.grid[y])):
                     alive = self.eval(x, y)
-                    if alive:
-                        cpt += 1
-                        char = '#'
-                    else:
-                        char = '.'
+                    char = alive and '#' or '.'
 
                     # Save new result
                     self.new_grid[y][x] = char
 
+            # Save new state
             self.grid = self.new_grid
-            print 'Step', i, cpt
+            self.add_static(self.grid)
             #self.debug()
+
+            # Calc cpt
+            cpt = sum([len(filter(lambda c : c == '#', l)) for l in self.grid])
+
+            print 'Step', i, cpt
+
+    def add_static(self, grid):
+        grid[0][0] = '#'
+        grid[0][self.xmax-1] = '#'
+        grid[self.ymax-1][0] = '#'
+        grid[self.ymax-1][self.xmax-1] = '#'
 
     def debug(self):
         # Display current grid
@@ -70,5 +78,7 @@ class Grid(object):
         return False
 
 if __name__ == '__main__':
+    #grid = Grid('18.test')
+    #grid.run(5)
     grid = Grid('18.input')
     grid.run(100)
