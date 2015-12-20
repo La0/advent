@@ -3,17 +3,20 @@ def house(x):
 
 
 def find_house(target):
-    target /= 10
-    houses = [1, ] * target
+    nb = 11
+    houses = [nb, ] * target
 
-    for elf in range(2, target):
-        for house in range(elf-1, target, elf):
+    for elf in range(2, target / 10):
+        nb_houses = 0
+        for house in range(elf-1, target / 10, elf):
             #print 'Add %d to house %d' % (elf, house+1)
-            houses[house] += elf
+            houses[house] += elf * nb
+            nb_houses += 1
+
+            if nb_houses >= 50:
+                break
 
     return min([i for i,h in enumerate(houses) if h >= target]) + 1
-
-    return houses.index(target) + 1
 
 
 if __name__ == '__main__':
