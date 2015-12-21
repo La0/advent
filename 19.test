@@ -1,11 +1,7 @@
+e => H
+e => O
 H => HO
 H => OH
 O => HH
 
-HO => A
-HO => B
-H => 00
-HOH => V
-OH => AAAC
-
-H2O
+HOHOHO
