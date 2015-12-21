@@ -74,8 +74,8 @@ class RPG(object):
 
             return enemy_ratio < my_ratio
 
-        # Find lowest cost
-        best = min([cost for g, cost in gears if __win(g)])
+        # Find highest cost to lose
+        best = max([cost for g, cost in gears if not __win(g)])
         for g in [g for g,c in gears if c == best]:
             print g
 
