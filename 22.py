@@ -61,7 +61,7 @@ all_spells = {
 }
 
 
-def battle(hero, boss, spells):
+def battle(hero, boss, spells, hard=False):
     """
     Run battle with spells listed
     Outcomes are :
@@ -84,6 +84,11 @@ def battle(hero, boss, spells):
 
         # print 'Step %d' % step
         if step % 2 == 0:
+            if hard:
+                hero.hit -= 1
+                if hero.is_dead:
+                    return 'lose'
+
             # Play magician
             # No more spell ?
             if step / 2 >= len(spells):
@@ -130,7 +135,7 @@ def battle(hero, boss, spells):
         step += 1
 
 
-def optimal_battle():
+def optimal_battle(hard=False):
     """
     Find optimal spell sequence
     against described enemy
@@ -148,7 +153,7 @@ def optimal_battle():
                 # Battle with this spells list
                 hero = Player('Hero', hit=50, mana=500)
                 boss = Player('Boss', hit=71, damage=10)
-                outcome = battle(hero, boss, spells)
+                outcome = battle(hero, boss, spells, hard=hard)
                 # print outcome
                 if outcome == 'win':
                     if cost < best_cost:
@@ -172,4 +177,4 @@ def optimal_battle():
 
 
 if __name__ == '__main__':
-    print optimal_battle()
+    print optimal_battle(True)
