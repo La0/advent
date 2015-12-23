@@ -3,7 +3,7 @@ import re
 def run_payload(filename):
     payload = []
     registers = {
-        'a' : 0,
+        'a' : 1,
         'b' : 0,
     }
 
