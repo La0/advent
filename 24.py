@@ -9,7 +9,7 @@ def find_packages(filename):
 
     # Build smallest triplets
     # Find all possible groups
-    target = sum(weights) / 3 # 3 equal groups
+    target = sum(weights) / 4 # 4 equal groups
     print 'Target', target
     for i in range(2, len(weights)):
         groups = [g for g in itertools.combinations(weights, i) if sum(g) == target]
