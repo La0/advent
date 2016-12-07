@@ -24,8 +24,25 @@ def is_room(line):
 
     return check == checksum
 
+def decrypt(line):
+    name, sector_id, _ = parse(line)
+    rot = int(sector_id) % 26
+    def _rot(char):
+        if char == '-':
+            return ' '
+        return chr((((ord(char) + rot) - 97) % 26) + 97)
+    return ''.join(map(_rot, name)), sector_id
+
 def calc_sum(lines):
     return sum([int(parse(line)[1]) for line in lines if is_room(line)])
+
+def display(lines):
+    for line in lines:
+        if not is_room(line):
+            continue
+        name, sector = decrypt(line)
+        if 'north' in name:
+            print(name, sector)
 
 
 if __name__ == '__main__':
@@ -34,5 +51,4 @@ if __name__ == '__main__':
     assert is_room('not-a-real-room-404[oarel]')
     assert not is_room('totally-real-room-200[decoy]')
     with open('4.txt') as f:
-        n = calc_sum(f.readlines())
-        print(n)
+        display(f.readlines())
