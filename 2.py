@@ -1,8 +1,10 @@
 def solve(lines):
     pad = (
-      (1, 2, 3),
-      (4, 5, 6),
-      (7, 8, 9),
+        (0, 0, 1, 0, 0),
+        (0, 2, 3, 4, 0),
+        (5, 6, 7, 8, 9),
+        (0, 'A', 'B', 'C', 0),
+        (0, 0, 'D', 0, 0),
     )
     directions = {
       'U' : (0, -1),
@@ -11,11 +13,19 @@ def solve(lines):
       'R' : (1, 0),
     }
     out = []
-    x, y = 1, 1 # start from 5
+    x, y = 0, 2 # start from 5
     for line in lines:
         for vx, vy in [directions[c] for c in line.replace('\n', '')]:
-            x = max(0, min(2, (x + vx)))
-            y = max(0, min(2, (y + vy)))
+            xx = max(0, min(4, x + vx))
+            yy = max(0, min(4, y + vy))
+            try:
+                c = pad[yy][xx]
+                if c == 0:
+                    raise Exception('Invalid char')
+            except:
+                continue
+
+            x, y = xx, yy
 
         out.append(pad[y][x])
     return ''.join(map(str, out))
