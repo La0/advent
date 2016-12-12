@@ -94,34 +94,6 @@ def display(state, elevator):
     dsp.reverse()
     print('\n'.join(dsp))
 
-def run_tree(state, elevator=0, count=0, states=[]):
-
-    explore = []
-    for next_state, next_elevator in next_states(state, elevator):
-
-        h = hash(next_state, next_elevator)
-        if h in states:
-            continue
-
-        if not check_state(next_state):
-            continue
-
-        if final_state(next_state):
-            return count
-
-        states.append(h)
-        explore.append((next_state, next_elevator))
-
-    # DEBUG
-    if count >= 200:
-        return 'stop'
-
-    # Recursively browse through tree
-    for s, e in explore:
-        out = run_tree(s, e, count+1, states)
-        if out is not None:
-            return out
-
 def run(lines):
     # Parse input and build first state
     state = []
@@ -131,9 +103,31 @@ def run(lines):
         state.append(chips+gens)
 
     # Search through tree
-    return run_tree(state)
+    # Breadth first, no recursion
+    states = []
+    queue = [(state, 0, 0)]
+    while len(queue) > 0:
+        s, e, c = queue.pop(0)
+        for next_state, next_elevator in next_states(s, e):
+
+            h = hash(next_state, next_elevator)
+            if h in states:
+                continue
+
+            if not check_state(next_state):
+                continue
+
+            if final_state(next_state):
+                return c+1
+
+            states.append(h)
+            queue.append((next_state, next_elevator, c+1))
+
+        # Limit recursion depth
+        if c >= 200:
+            return 'stop'
 
 if __name__ == '__main__':
-    with open('11.sample.txt') as f:
+    with open('11.txt') as f:
         solution = run(f.readlines())
         print(solution)
