@@ -6,10 +6,6 @@ import itertools
 regex_chips = re.compile(r'(\w+)-compatible microchip')
 regex_gens = re.compile(r'(\w+) generator')
 
-# possible moves:
-# go up with 1..4
-# go down with 1..4
-
 def split(floor):
     # Split gens & chips from a floor
     assert isinstance(floor, list)
@@ -33,8 +29,11 @@ def check_state(state):
             return False
     return True
 
-def final_state(state):
+def final_state(state, elevator):
     n = len(state)
+    # Elevator on top floor
+    if elevator != n -1:
+        return False
 
     # Low floors must be empty
     for i in range(n-1):
@@ -82,29 +81,46 @@ def next_states(state, elevator):
 
     return out
 
+def hash(state, elevator):
+    # Hash a state to check it's not already used
+    # marking every pair as interchangable (common marker)
+    k = lambda i : i[0] # id by name
+    pairs = [(x[:2], i) for i,f in enumerate(state) for x in f]
+    pairs = sorted(pairs, key=k)
+    pairs = itertools.groupby(pairs, k)
+    pairs = sorted(['p({})'.format(','.join([str(p[1]) for p in pos])) for _, pos in pairs])
+    return '{}:{}'.format(elevator, ':'.join(pairs))
+
 def display(state, elevator):
     # Helper
     dsp = ['{} {} {}'.format(i+1, i == elevator and 'E' or '.', ' '.join(fl)) for i, fl in enumerate(state)]
     dsp.reverse()
     print('\n'.join(dsp))
 
-def run_tree(state, elevator=0, count=0):
+def run_tree(state, elevator=0, count=0, states=[]):
+
+    # Check doublons
+    h = hash(state, elevator)
+    if h in states:
+        return
+
     display(state, elevator)
     print('-' * 80, count)
     if not check_state(state):
         return
 
-    if final_state(state):
-        print('FINAL', count)
+    if final_state(state, elevator):
         return count
 
+    states.append(h)
+
     # DEBUG
-    if count >= 100:
+    if count >= 200:
         return 'stop'
 
     # Recursively browse through tree
     for next_state, next_elevator in next_states(state, elevator):
-        out = run_tree(next_state, next_elevator, count+1)
+        out = run_tree(next_state, next_elevator, count+1, states)
         if out is not None:
             return out
 
