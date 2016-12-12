@@ -29,11 +29,8 @@ def check_state(state):
             return False
     return True
 
-def final_state(state, elevator):
+def final_state(state):
     n = len(state)
-    # Elevator on top floor
-    if elevator != n -1:
-        return False
 
     # Low floors must be empty
     for i in range(n-1):
@@ -59,9 +56,9 @@ def next_states(state, elevator):
         # remove from current floor
         ns[elevator] = [x for x in ns[elevator] if x not in comb]
 
-        ok = check_state(ns) and 'ok' or 'KO'
-        print('{} comb {} on next elevator {}'.format(ok, ','.join(comb), next_elevator))
-        display(ns, next_elevator)
+        ##ok = check_state(ns) and 'ok' or 'KO'
+        ##print('{} comb {} on next elevator {}'.format(ok, ','.join(comb), next_elevator))
+        ##display(ns, next_elevator)
         return (ns, next_elevator)
 
     # Produce all combinations possible
@@ -99,28 +96,29 @@ def display(state, elevator):
 
 def run_tree(state, elevator=0, count=0, states=[]):
 
-    # Check doublons
-    h = hash(state, elevator)
-    if h in states:
-        return
+    explore = []
+    for next_state, next_elevator in next_states(state, elevator):
 
-    display(state, elevator)
-    print('-' * 80, count)
-    if not check_state(state):
-        return
+        h = hash(next_state, next_elevator)
+        if h in states:
+            continue
 
-    if final_state(state, elevator):
-        return count
+        if not check_state(next_state):
+            continue
 
-    states.append(h)
+        if final_state(next_state):
+            return count
+
+        states.append(h)
+        explore.append((next_state, next_elevator))
 
     # DEBUG
     if count >= 200:
         return 'stop'
 
     # Recursively browse through tree
-    for next_state, next_elevator in next_states(state, elevator):
-        out = run_tree(next_state, next_elevator, count+1, states)
+    for s, e in explore:
+        out = run_tree(s, e, count+1, states)
         if out is not None:
             return out
 
