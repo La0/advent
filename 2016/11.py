@@ -102,6 +102,14 @@ def run(lines):
         gens = list(map(lambda x : x[:2].upper()+'g', regex_gens.findall(line)))
         state.append(chips+gens)
 
+    # Extra elements from part 2, on first floor
+    # An elerium generator.
+    # An elerium-compatible microchip.
+    # A dilithium generator.
+    # A dilithium-compatible microchip.
+    state[0] += ['ELg', 'ELm', 'DIg', 'DIm']
+
+
     # Search through tree
     # Breadth first, no recursion
     states = []
