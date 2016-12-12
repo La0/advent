@@ -36,6 +36,7 @@ ops = {
 
 def run(instructions):
     cursor = 0
+    registers['c'] = 1 # part 2
     while cursor >= 0 and cursor < len(instructions):
         line = instructions[cursor]
         print('cursor={} {} {}'.format(cursor, registers, line.replace('\n', '')))
